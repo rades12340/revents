@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { Grid, Button } from "semantic-ui-react";
-import EventList from "../../EventList/EventList";
-import EventForm from "../../EventForm/EventForm";
+import EventList from "../../events/EventList/EventList";
+import EventForm from "../../events/EventForm/EventForm";
 import cuid from "cuid";
 
 const eventsDashboard = [
