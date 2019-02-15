@@ -1,39 +1,55 @@
 import React, { Component } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
+import { connect } from "react-redux";
+import cuid from "cuid";
+import { createEvent, updateEvent } from "../eventActions";
 
-const emptyEvent = {
-  title: "",
-  date: "",
-  city: "",
-  venue: "",
-  hostedBy: ""
+const mapState = (state, ownProps) => {
+  const eventId = ownProps.match.params.id;
+
+  let event = {
+    id: "",
+    title: "",
+    date: "",
+    city: "",
+    venue: "",
+    hostedBy: ""
+  };
+
+  if (eventId && state.events.length > 0) {
+    event = state.events.filter(event => event.id === eventId)[0];
+  }
+
+  return {
+    event
+  };
+};
+
+const actions = {
+  createEvent,
+  updateEvent
 };
 
 class EventForm extends Component {
   state = {
-    events: emptyEvent
+    events: Object.assign({}, this.props.event)
   };
-
-  componentDidMount() {
-    if (this.props.selectedEvent !== null) {
-      this.setState({ events: this.props.selectedEvent });
-    }
-  }
 
   onFormSubmit = e => {
     e.preventDefault();
     if (this.state.events.id) {
       this.props.updateEvent(this.state.events);
+      this.props.history.goBack();
     } else {
-      this.props.createEvent(this.state.events);
+      const newEvent = {
+        ...this.state.events,
+        id: cuid(),
+        hostPhotoURL: "./assets/user.png"
+      };
+      this.props.createEvent(newEvent);
+      this.props.history.push("/events");
     }
   };
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedEvent !== this.props.selectedEvent) {
-      this.setState({ events: nextProps.selectedEvent || emptyEvent });
-    }
-  }
 
   onInputChange = e => {
     const newEvent = this.state.events;
@@ -48,7 +64,7 @@ class EventForm extends Component {
     const { events } = this.state;
 
     return (
-      <Segment>
+      <Segment style={{ marginTop: "7em" }}>
         <Form onSubmit={this.onFormSubmit}>
           <Form.Field>
             <label>Event Title</label>
@@ -99,13 +115,14 @@ class EventForm extends Component {
           <Button positive type="submit">
             Submit
           </Button>
-          <Button type="button" onClick={handleForm}>
-            Cancel
-          </Button>
+          <Button onClick={this.props.history.goBack}>Cancel</Button>
         </Form>
       </Segment>
     );
   }
 }
 
-export default EventForm;
+export default connect(
+  mapState,
+  actions
+)(EventForm);
