@@ -7,25 +7,24 @@ import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
+import {
+  composeValidators,
+  combineValidators,
+  isRequired,
+  hasLengthGreaterThan
+} from "revalidate";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
 
-  let event = {
-    id: "",
-    title: "",
-    date: "",
-    city: "",
-    venue: "",
-    hostedBy: ""
-  };
+  let event = {};
 
   if (eventId && state.events.length > 0) {
     event = state.events.filter(event => event.id === eventId)[0];
   }
 
   return {
-    event
+    initialValues: event
   };
 };
 
@@ -43,17 +42,31 @@ const category = [
   { key: "travel", text: "Travel", value: "travel" }
 ];
 
+const validate = combineValidators({
+  title: isRequired({ message: "The event title is required" }),
+  category: isRequired({ message: "Please provide a category" }),
+  description: composeValidators(
+    isRequired({ message: "Please provide a description" }),
+    hasLengthGreaterThan(4)({
+      message: "Description needs to be at least 5 characters"
+    })
+  )(),
+  city: isRequired("city"),
+  venue: isRequired("venue")
+});
+
 class EventForm extends Component {
-  onFormSubmit = e => {
-    e.preventDefault();
-    if (this.state.events.id) {
-      this.props.updateEvent(this.state.events);
+  onFormSubmit = values => {
+    // e.preventDefault();
+    if (this.props.initialValues.id) {
+      this.props.updateEvent(values);
       this.props.history.goBack();
     } else {
       const newEvent = {
-        ...this.state.events,
+        ...values,
         id: cuid(),
-        hostPhotoURL: "./assets/user.png"
+        hostPhotoURL: "./assets/user.png",
+        hostedBy: "Bob"
       };
       this.props.createEvent(newEvent);
       this.props.history.push("/events");
@@ -61,12 +74,13 @@ class EventForm extends Component {
   };
 
   render() {
+    const { invalid, submitting, pristine } = this.props;
     return (
       <Grid style={{ marginTop: "7em" }}>
         <Grid.Column width={10}>
           <Segment>
             <Header sub color="teal" content="Event Details" />
-            <Form onSubmit={this.onFormSubmit}>
+            <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
               <Field
                 name="title"
                 type="text"
@@ -107,7 +121,11 @@ class EventForm extends Component {
                 placeholder="Event Date"
               />
 
-              <Button positive type="submit">
+              <Button
+                disabled={invalid || submitting || pristine}
+                positive
+                type="submit"
+              >
                 Submit
               </Button>
               <Button onClick={this.props.history.goBack}>Cancel</Button>
@@ -122,4 +140,8 @@ class EventForm extends Component {
 export default connect(
   mapState,
   actions
-)(reduxForm({ form: "eventForm" })(EventForm));
+)(
+  reduxForm({ form: "eventForm", enableReinitialize: true, validate })(
+    EventForm
+  )
+);

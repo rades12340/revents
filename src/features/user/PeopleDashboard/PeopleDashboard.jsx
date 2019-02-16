@@ -2,7 +2,7 @@ import React from "react";
 
 const PeopleDashboard = () => {
   return (
-    <div>
+    <div style={{ marginTop: "7em" }}>
       <h1>PeopleDashboard</h1>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum impedit
