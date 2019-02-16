@@ -13,6 +13,8 @@ import {
   isRequired,
   hasLengthGreaterThan
 } from "revalidate";
+import DateInput from "../../../app/common/form/DateInput";
+import moment from "moment";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -52,12 +54,13 @@ const validate = combineValidators({
     })
   )(),
   city: isRequired("city"),
-  venue: isRequired("venue")
+  venue: isRequired("venue"),
+  date: isRequired("date")
 });
 
 class EventForm extends Component {
   onFormSubmit = values => {
-    // e.preventDefault();
+    values.date = moment(values.date).format();
     if (this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.goBack();
@@ -117,8 +120,11 @@ class EventForm extends Component {
               <Field
                 name="date"
                 type="text"
-                component={TextInput}
-                placeholder="Event Date"
+                component={DateInput}
+                dateFormat="YYYY-MM-DD HH:mm"
+                timeFormat="HH:mm"
+                showTimeSelect
+                placeholder="Date and Time of event"
               />
 
               <Button
