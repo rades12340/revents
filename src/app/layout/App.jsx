@@ -10,12 +10,14 @@ import { Container } from "semantic-ui-react";
 import SettingsDashboard from "../../features/user/Settings/SettingsDashboard";
 import EventForm from "../../features/events/EventForm/EventForm";
 import HomePage from "../../features/home/HomePage";
-import TestComponent from "../../testarea/TestComponent";
+import TestComponent from "../../features/testarea/TestComponent";
+import ModalManager from "../../features/modals/ModalManager";
 
 class App extends Component {
   render() {
     return (
       <div>
+        <ModalManager />
         <Switch>
           <Route path="/" exact component={HomePage} />
         </Switch>

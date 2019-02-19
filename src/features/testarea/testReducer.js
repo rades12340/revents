@@ -1,4 +1,4 @@
-import { createReducer } from "../app/common/util/ReducerUtil";
+import { createReducer } from "../../app/common/util/ReducerUtil";
 import { INCREMENT_COUNTER, DECREMENT_COUNTER } from "./TestConstants";
 
 const initialState = {
