@@ -2,11 +2,12 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { Grid } from "semantic-ui-react";
 import EventList from "../../events/EventList/EventList";
-
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { updateEvent } from "../eventActions";
 
 const mapState = state => ({
-  events: state.events
+  events: state.events,
+  loading: state.async.loading
 });
 
 const actions = {
@@ -19,7 +20,8 @@ class EventDashboard extends PureComponent {
   };
 
   render() {
-    const { events } = this.props;
+    const { events, loading } = this.props;
+    if (loading) return <LoadingComponent inverted={true} />;
     return (
       <Grid style={{ marginTop: "7em" }}>
         <Grid.Column width={10}>
