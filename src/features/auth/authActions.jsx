@@ -70,6 +70,7 @@ export const socialLogin = selectedProvider => async (
         photoURL: user.profile.avatarUrl,
         createdAt: firestore.FieldValue.serverTimestamp()
       });
+      console.log(user);
     }
   } catch (err) {
     console.log(err);
