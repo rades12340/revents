@@ -1,6 +1,6 @@
 import { toastr } from "react-redux-toastr";
 import moment from "moment";
-import { DELETE_EVENT, UPDATE_EVENT, FETCH_EVENTS } from "./eventConstants";
+import { DELETE_EVENT, FETCH_EVENTS } from "./eventConstants";
 import {
   asyncActionStart,
   asyncActionFinish,
@@ -51,6 +51,27 @@ export const updateEvent = event => {
       toastr.error("Oops", "Something went wrong");
     }
   };
+};
+
+export const cancelToggle = (cancelled, eventId) => async (
+  dispatch,
+  getState,
+  { getFirestore }
+) => {
+  const firestore = getFirestore();
+  const message = cancelled
+    ? "Are you sure you want to cancel the event?"
+    : "This will reactivate the event - are you sure?";
+  try {
+    toastr.confirm(message, {
+      onOk: () =>
+        firestore.update(`events/${eventId}`, {
+          cancelled: cancelled
+        })
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const deleteEvent = eventId => {
