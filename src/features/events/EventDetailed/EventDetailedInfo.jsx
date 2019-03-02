@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import EventDetailedMap from "./EventDetailedMap";
 import { Segment, Grid, Icon, Button } from "semantic-ui-react";
 import format from "date-fns/format";
+import moment from "moment";
 
 class EventDetailedInfo extends Component {
   state = {
@@ -22,6 +23,10 @@ class EventDetailedInfo extends Component {
 
   render() {
     const { event } = this.props;
+    let eventDate;
+    if (event.date) {
+      eventDate = moment(event.date).toDate();
+    }
     return (
       <Segment.Group>
         <Segment attached="top">
@@ -41,8 +46,8 @@ class EventDetailedInfo extends Component {
             </Grid.Column>
             <Grid.Column width={15}>
               <span>
-                {format(event.date, "dddd Do MMM")} at{" "}
-                {format(event.date, "h:mm A")}
+                {format(eventDate, "dddd Do MMM")} at{" "}
+                {format(eventDate, "h:mm A")}
               </span>
             </Grid.Column>
           </Grid>
