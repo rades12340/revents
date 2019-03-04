@@ -4,26 +4,30 @@ import { firestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
 import { Grid } from "semantic-ui-react";
 import EventList from "../../events/EventList/EventList";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { updateEvent } from "../eventActions";
+import { getEventsForDashboard } from "../eventActions";
 import EventActivity from "../EventActivity/EventActivity";
 
 const mapState = state => ({
-  events: state.firestore.ordered.events
+  events: state.events,
+  loading: state.async.loading
 });
 
 const actions = {
-  updateEvent
+  getEventsForDashboard
 };
 
 class EventDashboard extends PureComponent {
+  componentDidMount() {
+    this.props.getEventsForDashboard();
+  }
+
   handleDeleteEvent = eventId => () => {
     this.props.deleteEvent(eventId);
   };
 
   render() {
-    const { events } = this.props;
-    if (!isLoaded(events) || isEmpty(events))
-      return <LoadingComponent inverted={true} />;
+    const { events, loading } = this.props;
+    if (loading) return <LoadingComponent inverted={true} />;
     return (
       <Grid style={{ marginTop: "7em" }}>
         <Grid.Column width={10}>
