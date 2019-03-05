@@ -8,6 +8,7 @@ import {
   asyncActionFinish,
   asyncActionError
 } from "../async/asyncActions";
+import firebase from "../../app/config/firebase";
 
 export const updateProfile = user => async (
   dispatch,
