@@ -37,14 +37,10 @@ exports.createActivity = functions.firestore
   });
 
 exports.cancelActivity = functions.firestore
-  .document("events/${eventId}")
+  .document("events/{eventId}")
   .onUpdate((event, context) => {
     let updatedEvent = event.after.data();
     let previousEventData = event.before.data();
-    console.log({ event });
-    console.log({ context });
-    console.log({ updatedEvent });
-    console.log({ previousEventData });
 
     if (
       !updatedEvent.cancelled ||
@@ -57,8 +53,6 @@ exports.cancelActivity = functions.firestore
       updatedEvent,
       context.params.eventId
     );
-
-    console.log({ activity });
 
     return admin
       .firestore()

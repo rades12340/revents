@@ -6,7 +6,7 @@ import {
   asyncActionFinish,
   asyncActionError
 } from "../async/asyncActions";
-import { fetchSampleData } from "../../app/data/mockApi";
+
 import { createNewEvent } from "../../app/common/util/helpers";
 import firebase from "../../app/config/firebase";
 
