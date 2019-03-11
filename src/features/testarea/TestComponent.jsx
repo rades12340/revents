@@ -3,7 +3,7 @@ import { Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { Button } from "semantic-ui-react";
 
-import { incrementAsync, decrementAsync } from "./TestActions";
+import { testPermission, incrementAsync, decrementAsync } from "./TestActions";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
@@ -19,7 +19,8 @@ const mapState = state => ({
 const actions = {
   incrementAsync,
   decrementAsync,
-  openModal
+  openModal,
+  testPermission
 };
 
 class TestComponent extends Component {
@@ -56,6 +57,7 @@ class TestComponent extends Component {
       onChange: this.onChange
     };
     const {
+      testPermission,
       incrementAsync,
       decrementAsync,
       data,
@@ -86,6 +88,11 @@ class TestComponent extends Component {
           onClick={() => openModal("TestModal", { data: 43 })}
           color="teal"
           content="Open Modal"
+        />
+        <Button
+          onClick={testPermission}
+          color="teal"
+          content="Test Permissions"
         />
         <br />
         <br />

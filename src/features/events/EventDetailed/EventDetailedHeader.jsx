@@ -23,6 +23,8 @@ const EventDetailedHeader = ({
   isHost,
   isGoing,
   goingToEvent,
+  authenticated,
+  openModal,
   cancelGoingToEvent
 }) => {
   let eventDate;
@@ -60,11 +62,12 @@ const EventDetailedHeader = ({
       <Segment attached="bottom">
         {!isHost && (
           <React.Fragment>
-            {isGoing ? (
+            {isGoing && (
               <Button onClick={() => cancelGoingToEvent(event)}>
                 Cancel My Place
               </Button>
-            ) : (
+            )}
+            {!isGoing && authenticated && (
               <Button
                 loading={loading}
                 onClick={() => goingToEvent(event)}
@@ -72,7 +75,16 @@ const EventDetailedHeader = ({
               >
                 JOIN THIS EVENT
               </Button>
-            )}{" "}
+            )}
+            {!authenticated && (
+              <Button
+                loading={loading}
+                onClick={() => openModal("UnauthModal")}
+                color="teal"
+              >
+                JOIN THIS EVENT
+              </Button>
+            )}
           </React.Fragment>
         )}
 
