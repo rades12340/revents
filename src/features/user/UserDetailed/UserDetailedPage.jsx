@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { firestoreConnect, isEmpty } from "react-redux-firebase";
 import { compose } from "redux";
 import { Grid } from "semantic-ui-react";
-
+import { toastr } from "react-redux-toastr";
 import UserDetailedDescription from "./UserDetailedDescription";
 import UserDetailedEvents from "./UserDetailedEvents";
 import UserDetailedHeader from "./UserDetailedHeader";
@@ -54,6 +54,7 @@ class UserDetailedPage extends Component {
       `users/${this.props.match.params.id}`
     );
     if (!user.exists) {
+      toastr.error("Not Found", "This is not the user your are looking for");
       this.props.history.push("/error");
     }
     await this.props.getUserEvents(this.props.userUid);
